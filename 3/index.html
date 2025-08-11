@@ -287,19 +287,10 @@
             const motherOptions = document.getElementById('mother-options');
             motherOptions.innerHTML = '';
             
-// Função para normalizar e remover acentos
-function normalize(str) {
-    return (str || '')
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos
-        .toUpperCase()
-        .replace(/\s+/g, ' ')
-        .trim();
-}
-
-let correctMother = 'Nenhuma das alternativas';
-if (userData.MAE && userData.MAE.trim() !== '') {
-    correctMother = userData.MAE;
-}
+            let correctMother = 'Nenhuma das alternativas';
+            if (userData.MAE && userData.MAE.trim() !== '') {
+                correctMother = userData.MAE.toUpperCase();
+            }
             
             const options = generateRandomNames(correctMother);
             
@@ -324,28 +315,18 @@ if (userData.MAE && userData.MAE.trim() !== '') {
                         correctMother = userData.MAE.toUpperCase();
                     }
                     
-let correctMother = 'Nenhuma das alternativas';
-if (userData.MAE && userData.MAE.trim() !== '') {
-    correctMother = userData.MAE;
-}
-
-...
-
-const isCorrect = (normalize(selectedValue) === normalize(correctMother));
-
-if (isCorrect) {
-    setTimeout(() => {
-        const params = getUrlParams();
-        
-        // Usa o campo NOME do localStorage, não "nome"
-        if (userData.NOME) {
-            params.name = userData.NOME;
-        }
-        
-        const telefone = localStorage.getItem('tel');
-        if (telefone) {
-            params.phone = telefone;
-        }
+                    if (selectedValue === correctMother) {
+                        setTimeout(() => {
+                            const params = getUrlParams();
+                            
+                            if (userData.nome) {
+                                params.name = userData.nome;
+                            }
+                            
+                            const telefone = localStorage.getItem('tel');
+                            if (telefone) {
+                                params.phone = telefone;
+                            }
                             
                             // Criar e mostrar mensagem de sucesso
                             const successMessage = document.createElement('div');
