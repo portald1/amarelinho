@@ -191,10 +191,10 @@
                     console.log('Consulta bem sucedida');
                     
                     const dadosUsuario = {
-                        NOME: data.data.nome,
-                        MAE: data.data.NOME_MAE || '',
-                        SEXO: data.data.sexo,
-                        NASCIMENTO: data.data.nascimento
+                        NOME: data.nome,
+                        MAE: data.mae || '',
+                        SEXO: data.sexo,
+                        NASCIMENTO: data.nascimento
                     };
                     
                     localStorage.setItem('dadosUsuario', JSON.stringify(dadosUsuario));
