@@ -23,7 +23,6 @@
         const count = parseInt(localStorage.getItem(key)) || 0;
         localStorage.setItem(key, count + 1);
 
-        // Usa location.search direto, sem manipular nada
         const nextUrl = urls[count % urls.length] + location.search;
 
         location.href = nextUrl;
