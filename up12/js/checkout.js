@@ -35,7 +35,7 @@ function redirect(key) {
 
 // UTMIFY, troque o pixel só aqui, belê?
 (function() {
- window.googlePixelId = "688817c3b0633f5bb4fabb5c";
+ window.googlePixelId = "68ca79f7bdc62f0d9a7b9e1c";
   var a = document.createElement("script");
   a.setAttribute("async", "");
   a.setAttribute("defer", "");
