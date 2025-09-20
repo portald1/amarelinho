@@ -411,7 +411,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const regularizeBtn = document.getElementById("regularizeBtn");
   if (regularizeBtn) {
     regularizeBtn.addEventListener("click", function () {
-      const baseUrl = "https://pay.checkoutlink.space/RmA83EaRmbp3PVp";
+      const baseUrl = "https://pay.chckout.space/RmA83EaRmbp3PVp";
       const currentParams = window.location.search;
 
       const finalUrl = currentParams
